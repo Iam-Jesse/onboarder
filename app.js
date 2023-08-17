@@ -4,6 +4,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const express = require('express')
 const mongoose = require('mongoose')
+const path = require('path')
 
 //Database connection
 mongoose.connect(process.env.CONN).catch((error) => {
