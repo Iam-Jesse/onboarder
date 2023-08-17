@@ -19,5 +19,8 @@
     "jsonwebtoken": "^9.0.1",
     "method-override": "^3.0.0",
     "mongoose": "^7.4.3"
+  },
+  "engines": {
+    "node": ">=18.12.1"
   }
 }
