@@ -10,10 +10,10 @@ router.post(
   '/login',
   body('email').isEmail().withMessage('Invalid email').trim(),
   body('password')
+    .trim()
     .not()
     .isEmpty()
-    .withMessage('All fields are required')
-    .trim(),
+    .withMessage('All fields are required'),
   async (req, res) => {
     const { errors } = validationResult(req)
     console.log(errors)
@@ -21,7 +21,7 @@ router.post(
       return res.status(401).send({ error: errors[0].msg })
     }
 
-    const {email, password} = req.body
+    const { email, password } = req.body
 
     try {
       const user = await Admin.findOne({ email })
