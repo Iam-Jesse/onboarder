@@ -186,6 +186,30 @@ router.post('/onboarding_details', async (req, res) => {
   }
 })
 
+router.get('/onboarding_details', async (req, res) => {
+  try {
+    const authenticatedUser = await webflow.authenticatedUser()
+
+    if (!authenticatedUser) {
+      res.status(401).json({ error: 'Invalid user' })
+    }
+
+    console.log(authenticatedUser)
+
+    const user = await User.findOne({ webflow_id: authenticatedUser.user._id })
+      .populate('entity')
+      .exec()
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    res.send(user)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ error: 'Something went wrong!' })
+  }
+})
+
 router.post('/submit_onboarding_details', async (req, res) => {
   try {
     const authenticatedUser = await webflow.authenticatedUser()
