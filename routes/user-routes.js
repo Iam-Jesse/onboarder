@@ -197,7 +197,6 @@ router.post('/save_progress', async (req, res) => {
     }
 
     user.board_members = board_members
-    user.entity = entity._id
     user.status.form_submitted = 'in_progress'
 
     const savedUser = user.save()
@@ -383,7 +382,6 @@ router.post('/save_details', async (req, res) => {
     }
 
     user.board_members = board_members
-    user.entity = entity._id
     user.status.form_submitted = 'complete'
     user.status.approved = 'in_progress'
 

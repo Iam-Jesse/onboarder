@@ -4,6 +4,7 @@ const stripe = require('stripe')(process.env.STRIPE_API_KEY)
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
+const Entity = mongoose.model('Entity')
 const axios = require('axios')
 
 router.post(
@@ -63,8 +64,19 @@ router.post(
 
         if (webflowUser) {
           newUser.webflow_id = webflowUser.data._id
-          newUser.save()
         }
+
+        const newEntity = await Entity.findOneAndUpdate(
+          { associated_user: email },
+          {
+            associated_user: email,
+            entity_incorporation_date: event.created
+          },
+          { upsert: true, new: true }
+        )
+        
+        newUser.entity = newEntity._id
+        newUser.save()
       } catch (err) {
         console.log(err)
       }

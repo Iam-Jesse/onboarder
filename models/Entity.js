@@ -82,8 +82,9 @@ const entitySchema = new mongoose.Schema({
     type: String,
     default: 'Active'
   },
-  entity_incorporation_date: String,
-  entity_corporate_controller: String
+  entity_incorporation_date: Number,
+  entity_corporate_controller: String,
+  timestamps: true
 })
 
 const Entity = mongoose.model('Entity', entitySchema)
