@@ -1,3 +1,27 @@
 Save customer ID details and email from the form and expire in a few days, if payment is not successful.
 Strengthen DB connection.
 Remove CORS from code.
+Add email change on webflow and update user when email is changed.
+Set min date and max date for date of birth
+Remove lorem ipsum text from review form submission webflow
+
+Think thoroughly on the verification process before saving to database.
+Validate using express-validator middleware.
+Validate correct number of entries with numShareholders
+Restrict CORS to only webflow site url
+Clean up user routes
+
+Share percentages
+Director and Shareholder cannot both be No
+should not be less than or greater than 100
+no share holder? no share holder percentage
+Confirm that share percentage is not more than 100%
+Date
+Change date to dynamic
+
+Specify whether it's save progress or submit final form.
+
+
+
+
+Save stripe date of payment

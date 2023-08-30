@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const entitySchema = new mongoose.Schema({
-  name: String,
+  entity_name: String,
   type: String,
   suffix: String,
   registered_office_block_number: String,
@@ -10,11 +10,9 @@ const entitySchema = new mongoose.Schema({
   registered_office_level: String,
   registered_office_unit: String,
   registered_office_postal_code: String,
-  other_address_1: String,
-  other_address_2: String,
   activity: String,
   associated_user: String,
-  activity_number: Number,
+  activity_number: String,
   entity_css_client: {
     type: Boolean,
     default: false
