@@ -24,4 +24,4 @@ Specify whether it's save progress or submit final form.
 
 
 
-Save stripe date of payment
+SentroWeb takeout env variables

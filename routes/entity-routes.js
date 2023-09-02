@@ -7,6 +7,7 @@ router.post(
   '/check_business_name',
   body('entity_name').trim().not().isEmpty(),
   (req, res) => {
+    console.log('reached')
     const { errors } = validationResult(req)
     if (errors.length > 0) {
       return res.status(400).send({ error: 'Enter valid entity name!' })

@@ -10,7 +10,7 @@ const readCSVFile = (entity_name, callback) => {
     let available = true
     for (let i = 0; i < parsedData.length; i++) {
       const lowerData = parsedData[i].toLowerCase()
-      if (lowerData === entity_name.toLowerCase()) {
+      if (lowerData.includes(entity_name.toLowerCase())) {
         console.log(lowerData)
         available = false
         break
