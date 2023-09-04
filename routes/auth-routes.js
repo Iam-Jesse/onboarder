@@ -40,7 +40,7 @@ router.post(
 
       console.log(user)
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: '15m',
+        expiresIn: '60m',
       })
       return res.status(200).send({ token })
     } catch (err) {

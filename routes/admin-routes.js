@@ -12,7 +12,6 @@ router.get('/users', verifyJWT, async (req, res) => {
     const users = await User.find({ 'status.form_submitted': 'complete' })
       .populate('entity')
       .exec()
-    console.log('users fetched successfully')
 
     res.json({ users })
   } catch (err) {
@@ -32,32 +31,93 @@ router.get('/user/:id', verifyJWT, async (req, res) => {
   }
 })
 
-router.put('/user/:id', verifyJWT, async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id)
-
-    if (!user) {
-      return res.json({ error: 'Invalid user' })
+router.put(
+  '/user/:id',
+  verifyJWT,
+  body('full_name').trim().not().isEmpty(),
+  body('id_type').trim().not().isEmpty(),
+  body('id_number').trim().not().isEmpty(),
+  body('is_director').trim().not().isEmpty(),
+  body('is_shareholder').trim().not().isEmpty(),
+  body('email').trim().not().isEmpty(),
+  body('nationality').trim().not().isEmpty(),
+  body('country_of_birth').trim().not().isEmpty(),
+  body('date_of_birth').trim().not().isEmpty(),
+  body('country_code').trim().not().isEmpty(),
+  body('phone').trim().not().isEmpty(),
+  body('local_house_no').trim().not().isEmpty(),
+  body('local_street_name').trim().not().isEmpty(),
+  async (req, res) => {
+    const { errors } = validationResult(req)
+    if (errors.length > 0) {
+      return res.status(400).send({ error: 'All fields are required!' })
     }
+    try {
+      delete req.body.user_id
+      const user = await User.findOneAndUpdate(
+        { 'board_members._id': req.body._id },
+        {
+          $set: {
+            'board_members.$': req.body,
+          },
+        },
+        { new: true }
+      )
 
-    user.board_members.forEach((member) => {
-      if (member._id == req.body._id) {
-        console.log('matched')
-        delete req.body._id
-        console.log('old_member', member)
-        member = req.body
-        console.log('new member', member)
-        user.save()
-        return res.json({ success: 'user saved successfully' })
+      if (!user) {
+        return res.json({ error: 'Invalid user' })
       }
-    })
-  } catch (err) {
-    console.log(err)
-    res.json({
-      error: 'Something went wrong!',
-    })
+      return res.json({ success: 'user saved successfully' })
+    } catch (err) {
+      console.log(err)
+      res.json({
+        error: 'Something went wrong!',
+      })
+    }
   }
-})
+)
+
+router.put(
+  '/entity/:id',
+  verifyJWT,
+  body('entity_name').trim().not().isEmpty(),
+  body('type').trim().not().isEmpty(),
+  body('suffix').trim().not().isEmpty(),
+  body('activity').trim().not().isEmpty(),
+  body('registered_office_block_number').trim().not().isEmpty(),
+  body('registered_office_street').trim().not().isEmpty(),
+  body('registered_office_level').trim().not().isEmpty(),
+  body('registered_office_unit').trim().not().isEmpty(),
+  body('registered_office_building').trim().not().isEmpty(),
+  body('registered_office_postal_code').trim().not().isEmpty(),
+  async (req, res) => {
+    console.log(req.body)
+    const { errors } = validationResult(req)
+    if (errors.length > 0) {
+      return res.status(400).send({ error: 'All fields are required!' })
+    }
+    try {
+      delete req.body.user_id
+      const activity_number = req.body.activity.replace(/[^0-9]/g,"")
+      console.log(activity_number)
+      const entity = await Entity.findOneAndUpdate(
+        { _id: req.body._id },
+        {...req.body, activity_number},
+        { new: true }
+      )
+
+      if (!entity) {
+        throw new Error()
+      }
+      return res.json({ success: 'entity saved successfully' })
+    } catch (err) {
+      console.log(err)
+      res.json({
+        error: 'Something went wrong!',
+      })
+    }
+  }
+)
 
 router.post('/sentroweb', verifyJWT, (req, res) => {
   console.log('sentroweb api reached')
@@ -69,7 +129,7 @@ router.post('/sentroweb', verifyJWT, (req, res) => {
     item.searchIndividual = true
     queries.push(item)
   })
-  
+
   axios
     .post(
       'https://api.ingenique.asia/sentroweb-service/screening/v1.0/search',
@@ -86,7 +146,7 @@ router.post('/sentroweb', verifyJWT, (req, res) => {
       }
     )
     .then((result) => {
-      res.json({result: result.data})
+      res.json({ result: result.data })
     })
     .catch((err) => {
       console.log(err)
