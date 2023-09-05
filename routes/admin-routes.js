@@ -52,6 +52,19 @@ router.put(
     if (errors.length > 0) {
       return res.status(400).send({ error: 'All fields are required!' })
     }
+    if (req.body.is_director === 'no' && req.body.is_shareholder === 'no') {
+      return res.json({
+        error: 'Director and shareholder selection cannot both be No!',
+      })
+    }
+    if (
+      req.body.is_shareholder === 'yes' &&
+      (!req.body.share_percentage || !Number(req.body.share_percentage))
+    ) {
+      return res.json({
+        error: 'Specify share percentages for shareholder',
+      })
+    }
     try {
       delete req.body.user_id
       const user = await User.findOneAndUpdate(
@@ -98,11 +111,11 @@ router.put(
     }
     try {
       delete req.body.user_id
-      const activity_number = req.body.activity.replace(/[^0-9]/g,"")
+      const activity_number = req.body.activity.replace(/[^0-9]/g, '')
       console.log(activity_number)
       const entity = await Entity.findOneAndUpdate(
         { _id: req.body._id },
-        {...req.body, activity_number},
+        { ...req.body, activity_number },
         { new: true }
       )
 
@@ -149,7 +162,11 @@ router.post('/sentroweb', verifyJWT, (req, res) => {
       res.json({ result: result.data })
     })
     .catch((err) => {
-      console.log(err)
+      if (err.response) {
+        return res
+          .status(err.response.status)
+          .json({ error: err.response.statusText })
+      }
       return res.status(500).json({ error: 'Something went wrong' })
     })
 })
