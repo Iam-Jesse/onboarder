@@ -13,77 +13,8 @@ const entitySchema = new mongoose.Schema({
   activity: String,
   associated_user: String,
   activity_number: String,
-  entity_css_client: {
-    type: Boolean,
-    default: false
-  },
-  entity_auditor: {
-    type: Boolean,
-    default: false
-  },
-  entity_taxation_client: {
-    type: Boolean,
-    default: false
-  },
-  entity_corporate_shareholder: {
-    type: Boolean,
-    default: false
-  },
-  entity_fund_management: {
-    type: Boolean,
-    default: false
-  },
-  entity_accounting_client: {
-    type: Boolean,
-    default: false
-  },
-  entity_corporate_director: {
-    type: Boolean,
-    default: false
-  },
-  entity_corporate_owner: {
-    type: Boolean,
-    default: false
-  },
-  entity_external_corporate_secretary: {
-    type: Boolean,
-    default: false
-  },
-  entity_audit_client: {
-    type: Boolean,
-    default: false
-  },
-  entity_prospect: {
-    type: Boolean,
-    default: false
-  },
-  entity_client: {
-    type: Boolean,
-    default: false
-  },
-  entity_non_client: {
-    type: Boolean,
-    default: false
-  },
-  entity_country: {
-    type: String,
-    default: 'SINGAPORE'
-  },
-  entity_address_country: {
-    type: String,
-    default: 'SINGAPORE'
-  },
   entity_registration_number: String,
-  entity_status: {
-    type: Boolean,
-    default: false
-  },
-  entity_country: {
-    type: String,
-    default: 'Active'
-  },
-  entity_incorporation_date: Number,
-  entity_corporate_controller: String
+  entity_incorporation_date: Number
 })
 
 const Entity = mongoose.model('Entity', entitySchema)
