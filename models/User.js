@@ -40,6 +40,8 @@ const userSchema = new mongoose.Schema({
       local_building: String,
       local_unit_no: String,
       local_postal_code: String,
+      nric_front: String,
+      nric_back: String
     },
   ],
   status: {

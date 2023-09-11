@@ -6,6 +6,9 @@ const User = mongoose.model('User')
 const { body, validationResult } = require('express-validator')
 const Entity = mongoose.model('Entity')
 const axios = require('axios')
+const formidable = require('formidable').formidable
+const tmp = require('tmp')
+const fs = require('fs')
 
 router.get('/users', verifyJWT, async (req, res) => {
   try {
@@ -66,7 +69,6 @@ router.put(
       })
     }
     try {
-      delete req.body.user_id
       const user = await User.findOneAndUpdate(
         { 'board_members._id': req.body._id },
         {
@@ -110,7 +112,6 @@ router.put(
       return res.status(400).send({ error: 'All fields are required!' })
     }
     try {
-      delete req.body.user_id
       const activity_number = req.body.activity.replace(/[^0-9]/g, '')
       console.log(activity_number)
       const entity = await Entity.findOneAndUpdate(
@@ -131,6 +132,52 @@ router.put(
     }
   }
 )
+
+router.put('/image/:member/:image', verifyJWT, (req, res) => {
+  const tmpobj = tmp.dirSync({ unsafeCleanup: true })
+  let options = { uploadDir: tmpobj.name, keepExtensions: true }
+  const form = formidable(options)
+
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      tmpobj.removeCallback()
+      return res.json({ error: 'File is required!' })
+    }
+    console.log(fields)
+
+    let oldpath = files[req.params.image][0].filepath
+    let newName = `${Date.now()}${files[req.params.image][0].newFilename}`
+    let newpath = `${process.cwd()}/files/${newName}`
+    let previouspath = `${process.cwd()}/files/${fields.previous[0]}`
+    fs.renameSync(oldpath, newpath)
+
+    fs.exists(previouspath, (exist) => {
+      if (exist) {
+        fs.unlink(previouspath)
+      }
+    })
+
+    try {
+      const user = await User.findOneAndUpdate(
+        { 'board_members._id': req.params.member },
+        {
+          $set: {
+            [`board_members.$.${req.params.image}`]: newName,
+          },
+        },
+        { new: true }
+      )
+      if (!user) {
+        throw new Error()
+      }
+      res.json({ success: 'Image updated successfully' })
+    } catch (err) {
+      console.log(err)
+      tmpobj.removeCallback()
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  })
+})
 
 router.post('/sentroweb', verifyJWT, (req, res) => {
   console.log('sentroweb api reached')
