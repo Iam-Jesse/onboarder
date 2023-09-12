@@ -169,7 +169,7 @@ router.post('/save', (req, res) => {
           for (key in files) {
             let oldpath = files[key][i].filepath
             let newName = `${Date.now()}${files[key][i].newFilename}`
-            let newpath = path.join(__dirname, `/public/files/${newName}`)
+            let newpath = path.join(__dirname, `../public/files/${newName}`)
             fs.rename(oldpath, newpath, function (err) {
               if (err) {
                 console.log(err)
