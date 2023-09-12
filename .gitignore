@@ -3,3 +3,6 @@
 
 #environmental variables
 .env
+
+#test files
+/public/files

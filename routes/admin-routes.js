@@ -92,6 +92,48 @@ router.put(
   }
 )
 
+router.post('/user/:id/:status', verifyJWT, async (req, res) => {
+  const progress = {
+    approved: {
+      approved: req.body.result ? 'complete' : 'in_progress',
+      screening_complete: req.body.result ? 'in_progress' : 'incomplete',
+      signatures_complete: 'incomplete',
+      acra: 'incomplete',
+    },
+    screening_complete: {
+      approved: 'complete',
+      screening_complete: req.body.result ? 'complete' : 'in_progress',
+      signatures_complete: req.body.result ? 'in_progress' : 'incomplete',
+      acra: 'incomplete',
+    },
+    signatures_complete: {
+      approved: 'complete',
+      screening_complete: 'complete',
+      signatures_complete: req.body.result ? 'complete' : 'in_progress',
+      acra: req.body.result ? 'in_progress' : 'incomplete',
+    },
+    acra: {
+      approved: 'complete',
+      screening_complete: 'complete',
+      signatures_complete: 'complete',
+      acra: req.body.result ? 'complete' : 'in_progress',
+    },
+  }
+  try {
+    const user = await User.findOne({ _id: req.params.id })
+    if (!user) {
+      throw new Error()
+    }
+    user.status = { ...user.status, ...progress[req.params.status] }
+    user.save()
+    res.json({ status: user.status })
+    console.log('status updated successfully')
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ error: 'Something went wrong' })
+  }
+})
+
 router.put(
   '/entity/:id',
   verifyJWT,
@@ -147,14 +189,16 @@ router.put('/image/:member/:image', verifyJWT, (req, res) => {
 
     let oldpath = files[req.params.image][0].filepath
     let newName = `${Date.now()}${files[req.params.image][0].newFilename}`
-    let newpath = `${process.cwd()}/files/${newName}`
-    let previouspath = `${process.cwd()}/files/${fields.previous[0]}`
+    let newpath = `${process.cwd()}/public/files/${newName}`
+    let previouspath = `${process.cwd()}/public/files/${fields.previous[0]}`
     fs.renameSync(oldpath, newpath)
 
-    fs.exists(previouspath, (exist) => {
-      if (exist) {
-        fs.unlink(previouspath)
+    fs.access(previouspath, fs.constants.F_OK, (error) => {
+      if (error) {
+        console.log(error)
+        res.json({ error: 'File deletion failed' })
       }
+      fs.unlinkSync(previouspath)
     })
 
     try {

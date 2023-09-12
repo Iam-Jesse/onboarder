@@ -36,7 +36,7 @@ app.use('/api/', stripeRoutes)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(methodOverride('_method'))
-app.use(express.static(path.join(__dirname, '/files/')))
+app.use(express.static(path.join(__dirname, '/public/')))
 app.use(express.static(path.resolve(__dirname, './build')))
 
 //Routes

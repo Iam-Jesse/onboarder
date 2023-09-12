@@ -1,4 +1,3 @@
-Save customer ID details and email from the form and expire in a few days, if payment is not successful.
 Strengthen DB connection.
 Remove CORS from code.
 Add email change on webflow and update user when email is changed.

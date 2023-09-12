@@ -28,8 +28,8 @@ router.post(
         },
       ],
       mode: 'payment',
-      success_url: `https://incsingapore.webflow.io/payment-success`,
-      cancel_url: `https://incsingapore.webflow.io/payment-error`,
+      success_url: `https://inc.sg/payment-success`,
+      cancel_url: `https://inc.sg/business-registration-plans`,
     })
     res.json({ url: session.url })
   }
@@ -168,7 +168,7 @@ router.post('/save', (req, res) => {
           for (key in files) {
             let oldpath = files[key][i].filepath
             let newName = `${Date.now()}${files[key][i].newFilename}`
-            let newpath = `${process.cwd()}/files/${newName}`
+            let newpath = `${process.cwd()}/public/files/${newName}`
             fs.rename(oldpath, newpath, function (err) {
               if (err) {
                 return res.json({ error: 'File upload failed' })
@@ -178,9 +178,11 @@ router.post('/save', (req, res) => {
           }
         }
         //Validation end
-
-        board_members[i].is_director = fields[is_director_radio][0]
-        board_members[i].is_shareholder = fields[is_shareholder_radio][0]
+        console.log(fields)
+        if (fields[is_director_radio] && fields[is_shareholder_radio]) {
+          board_members[i].is_director = fields[is_director_radio][0]
+          board_members[i].is_shareholder = fields[is_shareholder_radio][0]
+        }
       }
 
       console.log(board_members)
