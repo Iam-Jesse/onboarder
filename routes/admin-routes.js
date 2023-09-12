@@ -196,7 +196,7 @@ router.put('/image/:member/:image', verifyJWT, (req, res) => {
     fs.access(previouspath, fs.constants.F_OK, (error) => {
       if (error) {
         console.log(error)
-        res.json({ error: 'File deletion failed' })
+        return res.json({ error: 'File deletion failed' })
       }
       fs.unlinkSync(previouspath)
     })

@@ -171,6 +171,7 @@ router.post('/save', (req, res) => {
             let newpath = `${process.cwd()}/public/files/${newName}`
             fs.rename(oldpath, newpath, function (err) {
               if (err) {
+                console.log(err)
                 return res.json({ error: 'File upload failed' })
               }
             })
