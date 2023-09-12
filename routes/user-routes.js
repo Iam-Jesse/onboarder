@@ -9,6 +9,7 @@ const Entity = mongoose.model('Entity')
 const formidable = require('formidable').formidable
 const tmp = require('tmp')
 const fs = require('fs')
+const path = require('path')
 
 router.post(
   '/stripe',
@@ -168,7 +169,7 @@ router.post('/save', (req, res) => {
           for (key in files) {
             let oldpath = files[key][i].filepath
             let newName = `${Date.now()}${files[key][i].newFilename}`
-            let newpath = `${process.cwd()}/public/files/${newName}`
+            let newpath = path.join(__dirname, `/public/files/${newName}`)
             fs.rename(oldpath, newpath, function (err) {
               if (err) {
                 console.log(err)
