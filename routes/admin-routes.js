@@ -241,11 +241,11 @@ router.post('/sentroweb', verifyJWT, (req, res) => {
       JSON.stringify({ queries }),
       {
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJhY2NvdW50SWQiOiIzMDBsaXZlIiwiaWF0IjoxNjg5NjYwNDcyLCJ1c2VySWQiOiI5MTUifQ.VErt2Dk1qVsekmA5HmEW1zTZM3kmQDq-FDom9lSncUEdzq9LXfTQdM7206CX3C6W04FFZ1incdrdWCPtdAiVlQ`,
+          Authorization: `Bearer ${process.env.SENTROWEB_TOKEN}`,
           'Content-Type': 'application/json',
-          'x-api-key': 'oo7KUatYqm3iLra6MhLta2BAeh6lIpUH9aoBTXg8',
+          'x-api-key': process.env.SENTROWEB_API_KEY,
           'x-sector-id': 'SGDJ',
-          'X-account-name': '300live',
+          'X-account-name': process.env.SENTROWEB_ACCT_NAME,
         },
       }
     )
